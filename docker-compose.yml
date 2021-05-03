@@ -1,0 +1,30 @@
+version: "3.3"
+
+services:
+  redis:
+    image: redis:latest
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./:/app
+    command: celery -A overflow.tasks worker -B --loglevel=info
+    links:
+      - redis
+    depends_on:
+      - redis
+    restart: always
+
+  covid_api:
+    build:
+      context: .
+      dockerfile: docker/API.Dockerfile
+    ports:
+      - "2100:2100"
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
+    restart: always
