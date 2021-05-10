@@ -24,7 +24,7 @@ class Post(BaseModel):
     source = Column(String(length=255))
 
     @classmethod
-    def update_or_create(cls, card: Card) -> 'Post':
+    def update_or_create(cls, card: Card) -> "Post":
         post = cls.where(title=card.title).all()
         if len(post) == 0:
             post = cls.create(**card.as_json())

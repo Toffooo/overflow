@@ -7,8 +7,8 @@ from overflow.covid_tracker.schemas import (
     City,
     Country,
     KZCovidTrackerResponse,
+    New,
     Place,
-    New
 )
 from overflow.covid_tracker.services.scraper import KZCovidTracker
 from overflow.database.models import Post
@@ -34,6 +34,17 @@ async def get_covid(tp: Optional[str] = ""):
         return data.cities
 
     return data.where(cities__name=tp)
+
+
+@COVID.get(
+    "/covid/time_period",
+    status_code=HTTPStatus.OK,
+    response_model=List[Place],
+    tags=["Covid"],
+)
+async def get_infected_data_by_time_period(date: int):
+    data = tracker.get()
+    return data.get_by_time_period(date=date)
 
 
 @COVID.get(

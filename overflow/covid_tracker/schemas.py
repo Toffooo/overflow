@@ -3,6 +3,8 @@ from typing import List
 from pydantic import BaseModel, validator
 from sqlalchemy.orm import Query
 
+from .utils import to_datetime
+
 
 class OrmBase(BaseModel):
     @validator("*", pre=True)
@@ -62,6 +64,23 @@ class KZCovidTrackerResponse(OrmBase):
     country: Country
     cities: List[City]
     places: List[Place]
+
+    def get_by_time_period(self, date: int) -> list:
+        result = []
+        for data in self.places:
+            updated_time = to_datetime(data.updated)
+            search_time = to_datetime(date)
+
+            if (
+                updated_time.day != search_time.day
+                or updated_time.year != search_time.year
+                or updated_time.month != search_time.month
+            ):
+                continue
+
+            result.append(data)
+
+        return result
 
     def where(self, **kwargs):
         for field, value in kwargs.items():
