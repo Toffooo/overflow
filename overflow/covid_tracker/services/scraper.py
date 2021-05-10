@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 from overflow.covid_tracker.schemas import KZCovidTrackerResponse
 from overflow.covid_tracker.services.web import Web
-from settings import COVID_TRACKER_BASE_URL, COVID_NEWS_URL
+from settings import COVID_NEWS_URL, COVID_TRACKER_BASE_URL
 
 
 class KZCovidTracker:
@@ -57,7 +57,7 @@ class Card:
             "title": self.title,
             "photo": self.photo_src,
             "content_link": self.content_link,
-            "source": self.source
+            "source": self.source,
         }
 
     def parse_title(self) -> None:
